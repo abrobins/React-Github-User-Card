@@ -64,6 +64,12 @@ class App extends React.Component {
             <p>Followers: {this.state.profile.followers}</p>
           </Card>
         </Cards>
+        <h2>Blair's Github Contribution Graph</h2>
+        <img
+          src="http://ghchart.rshah.org/abrobins"
+          alt="abrobins's Github chart"
+        />
+
         <FollowerList followers={this.state.followers} />
         {/* {!this.state.error &&
           this.state.followers.map(followers => ({
