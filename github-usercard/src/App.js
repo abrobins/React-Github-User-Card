@@ -45,10 +45,55 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  handleChanges = e => {
+    this.setState({ userText: e.target.value });
+    console.log(e.target.value);
+  };
+
+  componentDidUpdate() {
+    console.log("componentDidUpdate running");
+    axios
+      .get(`https://api.github.com/users/${this.state.userText}`)
+      .then(res => {
+        this.setState({
+          profile: res.data
+        });
+      })
+      .catch(err => console.log(err));
+
+    axios
+      .get(`https://api.github.com/users/${this.state.userText}/followers`)
+      .then(res => {
+        this.setState({
+          followers: res.data
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
+  fetchUser = e => {
+    e.preventDefault();
+
+    axios
+      .get(`https://api.github.com/users/${this.state.userText}/followers`)
+      .then(res => {
+        this.setState({
+          followers: res.data
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
     return (
       <div className="App">
-        <h1>Blair's Github User Dashboard</h1>
+        <h1>{this.state.profile.login}'s Github User Dashboard</h1>
+        <input
+          type="text"
+          value={this.state.userText}
+          onChange={this.handleChanges}
+        />
+        <button onClick={this.fetchUser}>Fetch user</button>
         <Cards>
           <Card>
             <p>
@@ -64,12 +109,9 @@ class App extends React.Component {
             <p>Followers: {this.state.profile.followers}</p>
           </Card>
         </Cards>
-        <h2>Blair's Github Contribution Graph</h2>
-        <img
-          src="http://ghchart.rshah.org/abrobins"
-          alt="abrobins's Github chart"
-        />
-
+        <h2>Github Contribution Graph</h2>
+        <img src="http://ghchart.rshah.org/abrobins" alt="Github chart" />
+        <h2>Github Followers</h2>
         <FollowerList followers={this.state.followers} />
         {/* {!this.state.error &&
           this.state.followers.map(followers => ({
